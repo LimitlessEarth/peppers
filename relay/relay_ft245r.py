@@ -85,8 +85,7 @@ class FT245R:
         self.relay_state = 0                # 8 bits representing 8 relays
 
     def init(self):
-        rb = FT245R()
-        dev_list = rb.list_dev()
+        dev_list = self.list_dev()
 
         # list of FT245R devices are returned
         if len(dev_list) == 0:
@@ -95,14 +94,14 @@ class FT245R:
 
         # Show their serial numbers
         for dev in dev_list:
-            print(dev.serial_number)
+            logging.info(dev.serial_number)
 
         # Pick the first one for simplicity
         dev = dev_list[0]
         logging.info('Using device with serial number ' + str(dev.serial_number))
 
         # Connect and turn on relay 2 and 4, and turn off
-        rb.connect(dev)
+        self.connect(dev)
 
 
     def list_dev(self):
