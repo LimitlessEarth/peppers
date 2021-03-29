@@ -1,0 +1,122 @@
+
+# Configure a default setup of Home Assistant (frontend, api, etc)
+homeassistant:
+  name: Peppers
+  allowlist_external_dirs:
+    - /home/homeassistant/picamera
+
+default_config:
+
+# Text to speech
+tts:
+  - platform: google_translate
+
+group: !include groups.yaml
+automation: !include automations.yaml
+script: !include scripts.yaml
+scene: !include scenes.yaml
+
+sensor:
+# SYSTEM MONITOR SENSOR
+  - platform: systemmonitor
+    resources:
+      - type: disk_use_percent
+        arg: /home
+      - type: memory_free
+# MQTT SENSORS
+  - platform: mqtt
+    name: "Visible Light"
+    state_topic: "peppers/sensors/light/visual"
+    unit_of_measurement: 'lm'
+  - platform: mqtt
+    name: "Infrared Light"
+    state_topic: "peppers/sensors/light/ir"
+    unit_of_measurement: 'lm'
+  - platform: mqtt
+    name: "UV Index"
+    state_topic: "peppers/sensors/light/uv_index"
+  - platform: mqtt
+    name: "Air Humidity"
+    state_topic: "peppers/sensors/air/humidity"
+    unit_of_measurement: '%'
+  - platform: mqtt
+    name: "Air Temperature"
+    state_topic: "peppers/sensors/air/temp"
+    unit_of_measurement: 'C'
+  - platform: mqtt
+    name: "Soil Moisture"
+    state_topic: "peppers/sensors/soil/moisture"
+  - platform: mqtt
+    name: "Soil Temperature"
+    state_topic: "peppers/sensors/soil/temp"
+    unit_of_measurement: 'C'
+
+switch:
+  - platform: mqtt
+    name: "Relay 1"
+    command_topic: "peppers/relay/1"
+    state_topic: "peppers/relays/state/1"
+    payload_off: 0
+    payload_on: 1
+    qos: 1
+  - platform: mqtt
+    name: "Relay 2"
+    command_topic: "peppers/relay/2"
+    state_topic: "peppers/relays/state/2"
+    payload_off: 0
+    payload_on: 1
+    qos: 1
+  - platform: mqtt
+    name: "Relay 3"
+    command_topic: "peppers/relay/3"
+    state_topic: "peppers/relays/state/3"
+    payload_off: 0
+    payload_on: 1
+    qos: 1
+  - platform: mqtt
+    name: "Relay 4"
+    command_topic: "peppers/relay/4"
+    state_topic: "peppers/relays/state/4"
+    payload_off: 0
+    payload_on: 1
+    qos: 1
+  - platform: mqtt
+    name: "Relay 5"
+    command_topic: "peppers/relay/5"
+    state_topic: "peppers/relays/state/5"
+    payload_off: 0
+    payload_on: 1
+    qos: 1
+  - platform: mqtt
+    name: "Relay 6"
+    command_topic: "peppers/relay/6"
+    state_topic: "peppers/relays/state/6"
+    payload_off: 0
+    payload_on: 1
+    qos: 1
+  - platform: mqtt
+    name: "Relay 7"
+    command_topic: "peppers/relay/7"
+    state_topic: "peppers/relays/state/7"
+    payload_off: 0
+    payload_on: 1
+    qos: 1
+  - platform: mqtt
+    name: "Relay 8"
+    command_topic: "peppers/relay/8"
+    state_topic: "peppers/relays/state/8"
+    payload_off: 0
+    payload_on: 1
+    qos: 1
+
+rpi_camera:
+    name: Raspberry Pi Camera  
+    image_width: 1920  
+    image_height: 1080  
+    image_quality: 70  
+    image_rotation: 0  
+    timelapse: 1000  
+    horizontal_flip: 0  
+    vertical_flip: 0  
+    file_path: /home/homeassistant/picamera/image.jpg
+

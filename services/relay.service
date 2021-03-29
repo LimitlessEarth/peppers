@@ -1,0 +1,14 @@
+[Unit]
+Description=Relay Mqtt Server
+After=network.target
+
+[Service]
+Type=simple
+User=pi
+ExecStart=/home/pi/Peppers/relay/relay_mqtt.py
+WorkingDirectory=/home/pi/Peppers/
+Restart=always
+RestartSec=10
+
+[Install]
+WantedBy=multi-user.target

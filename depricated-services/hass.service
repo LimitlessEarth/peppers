@@ -1,0 +1,14 @@
+[Unit]
+Description=Home Assistant Server
+After=network.target
+
+[Service]
+Type=simple
+User=homeassistant
+ExecStart=/usr/bin/hass
+WorkingDirectory=/home/homeassistant/.homeassistant
+Restart=always
+RestartSec=10
+
+[Install]
+WantedBy=multi-user.target

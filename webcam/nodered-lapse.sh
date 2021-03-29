@@ -1,7 +1,8 @@
 #!/bin/bash
 
-HOME_DIR=/home/pi/Peppers/webcam
-IMG_DIR=${HOME_DIR}/images
+HOME_DIR=/home/pi/Peppers/
+WEBCAM_DIR=${HOME_DIR}/webcam
+IMG_DIR=${WEBCAM_DIR}/images
 
 if [ ! -d $IMG_DIR ]; then
 	mkdir -p $IMG_DIR
@@ -26,6 +27,8 @@ do
     raspistill -h 2464 -w 3280 -o $RAW_FILE -awb greyworld >/dev/null 2>&1
     #fswebcam -r 2592x1944 --no-banner $RAW_FILE >/dev/null 2>&1
 
+    python $WEBCAM_DIR/take_measurements.py
+
     if [[ -f $RAW_FILE ]]; then
         #echo
         #echo "Rotating"
@@ -33,7 +36,7 @@ do
         echo "Overlaying Text"
         dtime=$(date +"%D %H:%M:%S")
 
-        source ${HOME_DIR}/measurements
+        source ${WEBCAM_DIR}/measurements
         caption="$dtime
 Humidity: ${HUMIDITY}%
 Temp: ${TEMPERATURE}F
@@ -62,11 +65,15 @@ UV Index: ${UV_INDEX}"
             fi
 
             image_count=$(ls $IMG_DIR/*_text.jpg | wc -l)
-            if [ "$image_count" -ge "30" ];then
+            if [ "$image_count" -ge "10" ]; then
                 echo "Generating, Appending Animation"
-                /usr/local/bin/ffmpeg -y -pattern_type glob -i "$IMG_DIR/*_text.jpg" -c:v h264_omx -b:v 6M -pix_fmt yuv420p -vf scale=1920:1080 -movflags +faststart $NEW_VID_FILE
+                /usr/bin/ffmpeg -y -pattern_type glob -i "$IMG_DIR/*_text.jpg" -c:v h264_omx -b:v 6M -pix_fmt yuv420p -vf scale=1920:1080 -movflags +faststart $NEW_VID_FILE
+                if [ $? -ne 0 ]; then
+                    echo "Failed to compile timelapse"
+                    exit 1;
+                fi
                 mv $PUB_VID_FILE $VID_FILE
-                /usr/local/bin/ffmpeg -f concat -safe 0 -i $APPEND_LIST_FILE -c copy $PUB_VID_FILE
+                /usr/bin/ffmpeg -f concat -safe 0 -i $APPEND_LIST_FILE -c copy $PUB_VID_FILE
 
                 if [[ ! -f $TOGGLE_FILE ]]; then
                     echo "0" > $SEG_NUM_FILE

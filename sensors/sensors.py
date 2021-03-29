@@ -3,32 +3,41 @@ import time
 import busio
 from board import SCL, SDA
 from adafruit_seesaw.seesaw import Seesaw
-from .si1145 import SI1145
+import si1145
+
+DHT_SENSOR = Adafruit_DHT.DHT22
+DHT_PIN = 17
 
 class Sensors:
-    def __init__(self):
-        self.light_sensor = SI1145()
+    def __init__(self, soil_sensors):
+        self.light_sensor = si1145.SI1145()
         self.i2c_bus = busio.I2C(SCL, SDA)
-        self.ss = Seesaw(self.i2c_bus, addr=0x36)
+        self.soil_sensors = [Seesaw(self.i2c_bus, addr=x) for x in soil_sensors]
 
     def get_light_info(self):
         vis = self.light_sensor.readVisible()
         IR = self.light_sensor.readIR()
         UV = self.light_sensor.readUV()
         uvIndex = UV / 100.0
-        print('Vis:             ' + str(vis))
-        print('IR:              ' + str(IR))
-        print('UV Index:        ' + str(uvIndex))
+        
+        return vis, IR, uvIndex
 
     def get_air_info(self):
-        humidity, temperature = Adafruit_DHT.read_retry(11, 17)
-        print("humidity:", humidity, " temp:",  temperature)
+        humidity, temp = Adafruit_DHT.read_retry(DHT_SENSOR, DHT_PIN)
 
-    def get_soil_info(self):
+        if humidity is not None:
+            humidity = round(humidity, 3)
+
+        if temp is not None:
+            temp = round(temp, 3)
+
+        return humidity, temp
+
+    def get_soil_info(self, index):
         # read moisture level through capacitive touch pad
-        touch = self.ss.moisture_read()
+        moisture = self.soil_sensors[index].moisture_read()
 
         # read temperature from the temperature sensor
-        temp = self.ss.get_temp()
+        temp = self.soil_sensors[index].get_temp()
 
-        print("moisture: " + str(touch)+ " temp: " + str(temp))
+        return moisture, temp
