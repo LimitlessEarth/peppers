@@ -27,8 +27,6 @@ do
     raspistill -h 2464 -w 3280 -o $RAW_FILE -awb greyworld >/dev/null 2>&1
     #fswebcam -r 2592x1944 --no-banner $RAW_FILE >/dev/null 2>&1
 
-    python $WEBCAM_DIR/take_measurements.py
-
     if [[ -f $RAW_FILE ]]; then
         #echo
         #echo "Rotating"

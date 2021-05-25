@@ -11,6 +11,8 @@ RELAY_COUNT = 8
 
 rb = relay_ft245r.FT245R()
 
+state = [False for x in range(0, 8)]
+
 # The callback for when the client receives a CONNACK response from the server.
 def on_connect(client, userdata, flags, rc):
     logging.info("Connected with result code "+str(rc))
@@ -25,8 +27,10 @@ def on_message(client, userdata, msg):
     relay_num = int(msg.topic.split('/')[-1])
     if int(msg.payload) == 0:
         rb.switchoff(relay_num)
+        state[relay_num - 1] = False
     else:
         rb.switchon(relay_num)
+        state[relay_num - 1] = True
 
     time.sleep(0.01)
 
@@ -62,7 +66,12 @@ def connect_to_device():
 def update_all_status(client):
     for relay_num in range(1,RELAY_COUNT+1):
         client.publish("peppers/relays/state/"+str(relay_num), rb.getstatus(relay_num))
-
+    
+    logging.info("Restoring switch state")
+    for i in range(0,len(state)):
+        if state[i]:
+            logging.info("Setting " + str(i + 1) + " on")
+            rb.switchon(i + 1)
 
 if __name__ == '__main__':
     client = mqtt.Client()
