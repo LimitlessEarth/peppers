@@ -65,6 +65,12 @@ UV Index: ${UV_INDEX}"
             image_count=$(ls $IMG_DIR/*_text.jpg | wc -l)
             if [ "$image_count" -ge "10" ]; then
                 echo "Generating, Appending Animation"
+
+                if [[ ! -f $PUB_VID_FILE ]]; then
+                    /usr/bin/ffmpeg -y -pattern_type glob -i "$IMG_DIR/*_text.jpg" -c:v h264_omx -b:v 6M -pix_fmt yuv420p -vf scale=1920:1080 -movflags +faststart $PUB_VID_FILE
+                    exit 0;
+                fi
+
                 /usr/bin/ffmpeg -y -pattern_type glob -i "$IMG_DIR/*_text.jpg" -c:v h264_omx -b:v 6M -pix_fmt yuv420p -vf scale=1920:1080 -movflags +faststart $NEW_VID_FILE
                 if [ $? -ne 0 ]; then
                     echo "Failed to compile timelapse"
