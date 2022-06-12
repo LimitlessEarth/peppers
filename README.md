@@ -1,7 +1,7 @@
 # Automation for Peppers
 
 ## What?
-Peppers is a collection of tools, service, etc. that make for automation and remote viewing of pepper plants using a specific set of devices.
+Peppers is a collection of tools, services, etc. that make for automation and remote viewing of pepper plants using a specific set of devices.
 
 ## Software
 - Lots of python
