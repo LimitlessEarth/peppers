@@ -1,6 +1,7 @@
 # Automation for Peppers
 
-** IF ANYONE ELSE BESIDES ME IS INTERESTED IN THIS PROJECT PLEASE CONTACT ME **
+**IF ANYONE ELSE BESIDES ME IS INTERESTED IN THIS PROJECT PLEASE CONTACT ME**
+
 I have only included rough information about this project. If you are interested in direct reconstructions, etc. I am happy to help, but until there is interest I am not going to document it for now.
 
 ## What?
